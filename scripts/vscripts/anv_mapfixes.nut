@@ -1802,7 +1802,7 @@ make_clip(	"_booster_float",		"Survivors",	1,	"-430 -320 0",		"999 280 777",		"-
 make_clip(	"_clipextend_afterfloata",	"Survivors",	1,	"-120 -354 -36",	"160 350 845",		"-2592 665 312.5" );
 make_clip(	"_clipextend_garage",		"Survivors",	1,	"-320 -8 0",		"320 8 732",		"-1264 2992 420" );
 make_clip(	"_clipextend_1ststreet",	"Survivors",	1,	"-8 -296 0",		"272 42 600",		"-368 2887 576" );
-make_clip(	"_commonhop_electricalbox",	"Survivors",	1,	"-8 -64 0",		"8 64 752",		"-80 1535 400" );
+make_clip(	"_commonhop_electricalbox",	"Survivors",	1,	"8 -64 0",		"8 64 752",		"-80 1535 400" );
 make_clip(	"_clipextend_afterfloatb",	"Survivors",	1,	"-4 -94 0",		"4 94 128",		"-2700 222 432" );
 make_clip(	"_clipextend_2ndstreeta",	"Survivors",	1,	"-8 -246 0",		"95 216 768",		"-2848 -840 384" );
 make_clip(	"_vuln_balconyg",		"Survivors",	1,	"-525 -48 0",		"525 54 737",		"-2440 -1040 416" );
@@ -4569,7 +4569,7 @@ while ( wep_spawners = Entities.FindByClassname( wep_spawners, "weapon_*" ) )
 	{
 		if ( !NetProps.HasProp( wep_spawners, "m_weaponID" ) )
 			continue;
-
+		
 		local spawnflags = NetProps.GetPropInt( wep_spawners, "m_spawnflags" );
 		if ( spawnflags == ( spawnflags | 4 ) )
 			NetProps.SetPropInt( wep_spawners, "m_spawnflags", ( spawnflags & ~4 ) );
@@ -4639,7 +4639,7 @@ while ( wep_spawners = Entities.FindByClassname( wep_spawners, "weapon_*" ) )
 	{
 		if ( !NetProps.HasProp( wep_spawners, "m_weaponID" ) )
 			continue;
-
+		
 		local spawnflags = NetProps.GetPropInt( wep_spawners, "m_spawnflags" );
 		if ( spawnflags == ( spawnflags | 4 ) )
 			NetProps.SetPropInt( wep_spawners, "m_spawnflags", ( spawnflags & ~4 ) );

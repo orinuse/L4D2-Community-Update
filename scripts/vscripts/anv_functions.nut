@@ -99,16 +99,15 @@ function make_brush ( user_strTargetname,
 		      user_strMaxs,
 		      user_strOrigin )
 {
-	user_strTargetname = VerifyEntityName(user_strTargetname);
-	local entname = g_UpdateName + user_strTargetname;
-
 	SpawnEntityFromTable( "func_brush",
 	{
-		targetname	=	entname,
+		targetname	=	g_UpdateName + user_strTargetname,
 		origin		=	StringToVector_Valve( user_strOrigin, " " )
 	} );
 
-	ApplyBoundingBox(entname, user_strMins, user_strMaxs);
+	EntFire( g_UpdateName + user_strTargetname, "AddOutput", "mins " + user_strMins );
+	EntFire( g_UpdateName + user_strTargetname, "AddOutput", "maxs " + user_strMaxs );
+	EntFire( g_UpdateName + user_strTargetname, "AddOutput", "solid 2" );
 
 	if ( developer() > 0 )
 	{
@@ -151,22 +150,21 @@ function make_navblock ( user_strTargetname,
 		case "Infected":	intTeamBlock =  3;	break;
 	}
 
-	user_strTargetname = VerifyEntityName(user_strTargetname);
-	local entname = g_UpdateName + user_strTargetname;
-
 	SpawnEntityFromTable( "func_nav_blocker",
 	{
-		targetname	=	entname,
+		targetname	=	g_UpdateName + user_strTargetname,
 		teamToBlock	=	intTeamBlock,
 		origin		=	StringToVector_Valve( user_strOrigin, " " )
 	} );
 
-	ApplyBoundingBox(entname, user_strMins, user_strMaxs);
+	EntFire( g_UpdateName + user_strTargetname, "AddOutput", "mins " + user_strMins );
+	EntFire( g_UpdateName + user_strTargetname, "AddOutput", "maxs " + user_strMaxs );
+	EntFire( g_UpdateName + user_strTargetname, "AddOutput", "solid 2" );
 
 	switch( user_strState )
 	{
-		case "Apply":		EntFire( entname, "BlockNav"   );	break;
-		case "Remove":		EntFire( entname, "UnblockNav" );	break;
+		case "Apply":		EntFire( g_UpdateName + user_strTargetname, "BlockNav"   );	break;
+		case "Remove":		EntFire( g_UpdateName + user_strTargetname, "UnblockNav" );	break;
 	}
 
 	if ( developer() > 0 )
@@ -384,17 +382,16 @@ function make_trigduck ( user_strTargetname,
 			 user_strMaxs,
 			 user_strOrigin )
 {
-	user_strTargetname = VerifyEntityName(user_strTargetname);
-	local entname = g_UpdateName + user_strTargetname;
-
 	SpawnEntityFromTable( "trigger_auto_crouch",
 	{
-		targetname	=	entname,
+		targetname	=	g_UpdateName + user_strTargetname,
 		spawnflags	=	1,
 		origin		=	StringToVector_Valve( user_strOrigin, " " )
 	} );
 
-	ApplyBoundingBox(entname, user_strMins, user_strMaxs);
+	EntFire( g_UpdateName + user_strTargetname, "AddOutput", "mins " + user_strMins );
+	EntFire( g_UpdateName + user_strTargetname, "AddOutput", "maxs " + user_strMaxs );
+	EntFire( g_UpdateName + user_strTargetname, "AddOutput", "solid 2" );
 
 	if ( developer() > 0 )
 	{
@@ -439,17 +436,16 @@ function make_trigmove ( user_strTargetname,
 		case "Jump":		intSpawnflags = 8192;		break;
 	}
 
-	user_strTargetname = VerifyEntityName(user_strTargetname);
-	local entname = g_UpdateName + user_strTargetname;
-
 	SpawnEntityFromTable( "trigger_playermovement",
 	{
-		targetname	=	entname,
+		targetname	=	g_UpdateName + user_strTargetname,
 		spawnflags	=	1 + intSpawnflags,
 		origin		=	StringToVector_Valve( user_strOrigin, " " )
 	} );
 
-	ApplyBoundingBox(entname, user_strMins, user_strMaxs);
+	EntFire( g_UpdateName + user_strTargetname, "AddOutput", "mins " + user_strMins );
+	EntFire( g_UpdateName + user_strTargetname, "AddOutput", "maxs " + user_strMaxs );
+	EntFire( g_UpdateName + user_strTargetname, "AddOutput", "solid 2" );
 
 	if ( developer() > 0 )
 	{
@@ -1434,7 +1430,7 @@ function patch_spawninfront( strOrigin, strMins, strMaxs )
 		{
 			OnStartTouch =
 			{
-				cmd1 = "!selfRunScriptCodeg_MapScript.LocalScript.DirectorOptions.PreferredMobDirection <- -101"
+				cmd1 = "!selfRunScriptCodeg_MapScript.LocalScript.DirectorOptions.PreferredMobDirection = -101"
 			}
 		}
 	} );
@@ -1789,41 +1785,6 @@ function con_comment( strComment )
 	{
 		printl( strComment + "\n" );
 	}
-}
-
-// Orin Additions
-//////////////////////////////////////////////////////////////////////////////
-// Verify name of entities so we ensure none have identical names as another.
-//////////////////////////////////////////////////////////////////////////////
-
-function VerifyEntityName(entname)
-{
-	local entcount = 0;
-	local ent = null;
-	while( ent = Entities.FindByName(ent, entname) )
-		entcount++;
-
-	if( entcount != 0 )
-		return entname+entcount;
-	else
-		return entname;
-}
-
-function ApplyBoundingBox(entname, mins, maxs)
-{
-	// Vectors have an additional layer of abstraction of being represented as strings in function arguments
-	local vecmins = StringToVector_Valve(mins, " ");
-	local vecmaxs = StringToVector_Valve(maxs, " ");
-
-	if( vecmins.X > 0 && vecmins.Y > 0 && vecmins.Z > 0)
-		throw "Mins's Vector cannot be all positive";
-	if( vecmaxs.X < 0 && vecmaxs.Y < 0 && vecmaxs.Z < 0)
-		throw "Maxs's Vector cannot be all negative";
-
-	// Apply after verification
-	EntFire( entname, "AddOutput", "mins " + mins );
-	EntFire( entname, "AddOutput", "maxs " + maxs );
-	EntFire( entname, "AddOutput", "solid 2" );
 }
 
 /*****************************************************************************
